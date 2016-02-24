@@ -14,14 +14,17 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <a class="navbar-brand" href="#">
-            Todo Application
-            <span id="task-counter">(0)</span>
+            Todo Application (<span id="task-counter">0</span>)
           </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          
+          <ul class="nav navbar-nav pull-right">
+            <li>
+              <a onclick="clearChecked()" class="disabled" disabled>Clear Checked</a>
+            </li>
+          </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
@@ -47,7 +50,13 @@
     </div>
   </main>
   <footer class="footer-wrapper">
-    
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+          
+        </div>
+      </div>
+    </div>
   </footer>
   <script type="text/javascript" src="js/jquery-1.12.0.min.js"></script>
   <script type="text/javascript" src="js/script.js"></script>

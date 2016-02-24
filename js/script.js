@@ -24,12 +24,12 @@
     function _addTask () {
       var _unique = _uniqueId();
       if (!_checkInput()) {
-        var listHtml  = '<li id="taskId-' + _unique + '">';
+        var listHtml  = '<li id="taskId-' + _unique + '" class="todo-list-li">';
             listHtml += '<div class="checkbox">';
             listHtml += '<label>';
-            listHtml += '<input type="checkbox"> <span> ' + _newTaskText.value + '</span>';
+            listHtml += '<input type="checkbox" class="todo-list-checkbox"> <span> ' + _newTaskText.value + '</span>';
             listHtml += '</label>';
-            listHtml += '<i onclick="return removeTask(' + _unique + ')" class="ion-close-circled icon-remove pull-right"></i>';
+            listHtml += '<i onclick="return removeTask(\'' + _unique + '\')" class="ion-close-circled icon-remove pull-right"></i>';
             listHtml += '</div>';
             listHtml += '</li>';
 
@@ -46,20 +46,37 @@
     }
 
     function _updateTaskCounter () {
-      _taskCounter.innerHTML = '(' + _taskList.length + ')';
+      _taskCounter.innerHTML = _taskList.length;
     }
 
-    function _removeTask(Id) {
-      console.log(Id)
-      // .parentNode.id;
-      document.getElementById('taskId-thisone').remove();
+    function _clearChecked(Id) {
+      var tastLength = _taskList.length,
+          _taskHtmlList = document.querySelectorAll('.todo-list-checkbox');
+      
+      if (Id) {
+        document.getElementById('taskId-' + Id).remove();
+        _updateTaskCounter();
+        return;
+      } else {
+        for(var i = 0; i < tastLength; i++) {
+          if (_taskHtmlList[i].checked == true) {
+            _removeChecked(_taskHtmlList, i);
+          }
+        }
+      } 
+    }
+
+    function _removeChecked (element, index) {
+      _taskList.splice(index, 1);
+      element[index].parentElement.parentElement.parentElement.remove();
+      _updateTaskCounter();
     }
 
     return {
       init        : _init,
       checkInput  : _checkInput,
       addTask     : _addTask,
-      removeTask  : _removeTask
+      clearChecked: _clearChecked
     }
   }
   var task = todoObject();
@@ -72,8 +89,11 @@
 
   window.removeTask = function (Id) {
     // event.preventDefault();
-    console.log(Id)
-    // task.removeTask(Id);
+    task.clearChecked(Id);
+  }
+
+  window.clearChecked = function () {
+    task.clearChecked();
   }
   
 })(window, jQuery);
