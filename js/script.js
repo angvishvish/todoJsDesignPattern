@@ -22,13 +22,14 @@
     }
 
     function _addTask () {
+      var _unique = _uniqueId();
       if (!_checkInput()) {
-        var listHtml  = '<li id="taskId-' + _uniqueId() + '">';
+        var listHtml  = '<li id="taskId-' + _unique + '">';
             listHtml += '<div class="checkbox">';
             listHtml += '<label>';
             listHtml += '<input type="checkbox"> <span> ' + _newTaskText.value + '</span>';
             listHtml += '</label>';
-            listHtml += '<i onclick="removeTask(event)" class="ion-close-circled icon-remove pull-right"></i>';
+            listHtml += '<i onclick="return removeTask(' + _unique + ')" class="ion-close-circled icon-remove pull-right"></i>';
             listHtml += '</div>';
             listHtml += '</li>';
 
@@ -48,9 +49,10 @@
       _taskCounter.innerHTML = '(' + _taskList.length + ')';
     }
 
-    function _removeTask() {
+    function _removeTask(Id) {
+      console.log(Id)
       // .parentNode.id;
-      console.log()
+      document.getElementById('taskId-thisone').remove();
     }
 
     return {
@@ -60,17 +62,18 @@
       removeTask  : _removeTask
     }
   }
-
   var task = todoObject();
 
   window.newTaskKeypress = function (event) {
-
-    if(event.charCode == 13)
+    if(event.charCode == 13) {
       task.addTask(event);
+    }
   }
 
-  window.removeTask = function (event) {
-    event.preventDefault();
-    task.removeTask();
+  window.removeTask = function (Id) {
+    // event.preventDefault();
+    console.log(Id)
+    // task.removeTask(Id);
   }
+  
 })(window, jQuery);
