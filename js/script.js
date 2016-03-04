@@ -2,7 +2,8 @@
 
 (function (window, $) {
   var todoObject = function () {
-    var _taskList = [],
+    var _taskList     = [],
+        _removingTask = [],
         _instance,
         _todoListId   = document.getElementById('todo-list'),
         _newTaskText  = document.getElementById('new-task'),
@@ -27,16 +28,21 @@
         var listHtml  = '<li id="taskId-' + _unique + '" class="todo-list-li">';
             listHtml += '<div class="checkbox">';
             listHtml += '<label>';
-            listHtml += '<input type="checkbox" class="todo-list-checkbox"> <span> ' + _newTaskText.value + '</span>';
+            listHtml += '<input type="checkbox" class="todo-list-checkbox ' + _unique + '"> <span> ' + _newTaskText.value + '</span>';
             listHtml += '</label>';
             listHtml += '<i onclick="return removeTask(\'' + _unique + '\')" class="ion-close-circled icon-remove pull-right"></i>';
             listHtml += '</div>';
             listHtml += '</li>';
 
         _todoListId.innerHTML += listHtml;
-        _taskList.push(_newTaskText.value);
+        _taskList.push({
+          id      : _unique,
+          name    : _newTaskText.value,
+          status  : 'todo',
+          checked : false 
+        });
 
-        _updateTaskCounter();
+        _updateDom();
         _emptyInput();
       }
     }
@@ -45,8 +51,9 @@
       _newTaskText.value = '';
     }
 
-    function _updateTaskCounter () {
+    function _updateDom () {
       _taskCounter.innerHTML = _taskList.length;
+
     }
 
     function _clearChecked(Id) {
@@ -55,21 +62,30 @@
       
       if (Id) {
         document.getElementById('taskId-' + Id).remove();
-        _updateTaskCounter();
+        _updateDom();
         return;
       } else {
         for(var i = 0; i < tastLength; i++) {
           if (_taskHtmlList[i].checked == true) {
-            _removeChecked(_taskHtmlList, i);
+            _removingTask.push(_taskHtmlList[i].className.split(' ')[1]);
           }
         }
-      } 
+      }
+      _removeChecked();
     }
 
     function _removeChecked (element, index) {
-      _taskList.splice(index, 1);
-      element[index].parentElement.parentElement.parentElement.remove();
-      _updateTaskCounter();
+      var taskLength = _removingTask.length; 
+      for( var i = 0; i < taskLength; i++) {
+        // console.log(_removingTask[i])
+        if (_taskList[i].id == _removingTask[i]) {
+          _taskList[i].checked = true;
+          _taskList[i].status  = 'done';
+          document.getElementById('taskId-' + _taskList[i].id).className += ' hide';
+        }
+      }
+      // console.log(_taskList)
+      _updateDom();
     }
 
     return {
